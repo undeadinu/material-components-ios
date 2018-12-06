@@ -182,6 +182,10 @@ Show all changes to components:
 
     scripts/release diff components/*/src/
 
+Show all changes to schemes:
+
+    scripts/release diff components/schemes/*/src/
+
 #### Diff everything
 
 Show all changes that are part of this release:
