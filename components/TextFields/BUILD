@@ -20,6 +20,16 @@ load("@build_bazel_rules_apple//apple:swift.bzl", "swift_library")
 
 licenses(["notice"])  # Apache 2.0
 
+# ChipTextField
+mdc_public_objc_library(
+    name = "ChipTextField_private",
+    hdrs = native.glob(["src/ChipTextField_private/*.h"]),
+    extra_srcs = native.glob( [
+            "src/ChipTextFielf_private/*.h", 
+            "src/ChipTextFielf_private/*.m,"
+            ])
+)
+
 mdc_objc_library(
     name = "private",
     hdrs = native.glob(["src/private/*.h"]),
@@ -45,7 +55,9 @@ mdc_public_objc_library(
         "//components/AnimationTiming",
         "//components/private/Math",
         "//components/Palettes",
-        "//components/Typography"
+        "//components/Typography",
+        # ChipTextField
+        ":ChipTextField_private",
     ],
 )
 

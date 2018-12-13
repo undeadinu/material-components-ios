@@ -13,7 +13,9 @@
 // limitations under the License.
 
 #import "MDCChipTextField.h"
+
 #import "MaterialChips.h"
+#import "MDCChipTextFieldScrollView.h"
 
 /*
  in progress:
@@ -31,9 +33,9 @@
  * convert text to label when pressing enter
  */
 
-@interface MDCChipTextField ()
+@interface MDCChipTextField () <MDCChipTextFieldScrollViewDataSource>
 
-@property (nonatomic, strong) UIView *chipsView;
+@property (nonatomic, strong) MDCChipTextFieldScrollView *chipsView;
 @property (nonatomic) CGFloat insetX;
 @property (nonatomic, strong) NSLayoutConstraint *leadingConstraint;
 @property (nonatomic, strong) NSMutableArray<MDCChipView *> *chips;
@@ -45,7 +47,9 @@
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    _chipsView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 160, frame.size.height)];
+    _chipsView = [[MDCChipTextFieldScrollView alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+    _chipsView.dataSource = self;
+    _chipsView.chipSpacing = 10.0f;
     _chipsView.translatesAutoresizingMaskIntoConstraints = NO;
     _chipsView.backgroundColor = [UIColor yellowColor];
     _chipsView.clipsToBounds = YES;
@@ -68,13 +72,13 @@
   chip.titleLabel.text = text;
   chip.translatesAutoresizingMaskIntoConstraints = NO;
 
-  [self.chipsView addSubview:chip];
+//  [self.chipsView addSubview:chip];
 
-  // Constraints
-  [self.chipsView addConstraints:@[
-     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]
-     ]];
+//  // Constraints
+//  [self.chipsView addConstraints:@[
+//     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+//     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]
+//     ]];
 
   MDCChipView *lastChip = [self.chips lastObject];
   if (lastChip == nil) {
@@ -239,6 +243,16 @@
   } else {
     [self selectLastChip];
   }
+}
+
+#pragma mark - MDCChipTextFieldScrollViewDataSource
+
+- (MDCChipView *)scrollView:(MDCChipTextFieldScrollView *)scrollView chipViewForIndex:(NSInteger)index {
+  return self.chips[index];
+}
+
+- (NSInteger)numberOfChipViewsInScrollView:(MDCChipTextFieldScrollView *)scrollView {
+  return self.chips.count;
 }
 
 @end
