@@ -16,8 +16,9 @@
 
 @interface MDCChipTextFieldScrollView ()
 
-@property (nonatomic, readwrite, strong) NSArray<MDCChipView *> *chipViews;
+@property (nonatomic, readwrite, strong) NSMutableArray<MDCChipView *> *chipViews;
 @property (nonatomic, readwrite, weak) UIView *contentView;
+@property (nonatomic, readwrite, weak) NSLayoutConstraint *trailingConstraint;
 
 @end
 
@@ -43,9 +44,42 @@
   UIView *contentView = [[UIView alloc] initWithFrame:self.frame];
   [self addSubview:contentView];
   self.contentView = contentView;
+
+  NSLayoutConstraint *contentConstraintTop = [NSLayoutConstraint constraintWithItem:contentView
+                                                                       attribute:NSLayoutAttributeTop
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:self
+                                                                       attribute:NSLayoutAttributeTop
+                                                                      multiplier:1
+                                                                        constant:0];
+  NSLayoutConstraint *contentConstraintBottom = [NSLayoutConstraint constraintWithItem:contentView
+                                                                          attribute:NSLayoutAttributeBottom
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self
+                                                                          attribute:NSLayoutAttributeBottom
+                                                                         multiplier:1
+                                                                           constant:0];
+  NSLayoutConstraint *contentConstraintLeading = [NSLayoutConstraint constraintWithItem:contentView
+                                                                          attribute:NSLayoutAttributeLeading
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self
+                                                                          attribute:NSLayoutAttributeLeading
+                                                                         multiplier:1
+                                                                           constant:0];
+  NSLayoutConstraint *contentConstraintTrailing = [NSLayoutConstraint constraintWithItem:contentView
+                                                                              attribute:NSLayoutAttributeTrailing
+                                                                              relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:self
+                                                                              attribute:NSLayoutAttributeTrailing
+                                                                             multiplier:1
+                                                                               constant:0];
+  [self addConstraints:@[contentConstraintTop, contentConstraintBottom, contentConstraintLeading, contentConstraintTrailing]];
+  self.trailingConstraint = contentConstraintTrailing;
   
   [self setShowsVerticalScrollIndicator:NO];
   [self setShowsHorizontalScrollIndicator:NO];
+
+  self.chipViews = [[NSMutableArray alloc] init];
 }
 
 - (void)reloadData {
@@ -72,10 +106,55 @@
     chipOffsetX += self.chipSpacing;
     chipOffsetX += CGRectGetWidth(chipView.frame);
   }
-  NSLog(@"aa");
 }
 
-//- (void)
+- (void)appendChip:(MDCChipView *)chipView {
+  [self removeConstraint:self.trailingConstraint];
+  [self.contentView addSubview:chipView];
+  NSLayoutConstraint *contentConstraintTop = [NSLayoutConstraint constraintWithItem:self.contentView
+                                                                          attribute:NSLayoutAttributeTop
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:chipView
+                                                                          attribute:NSLayoutAttributeTop
+                                                                         multiplier:1
+                                                                           constant:0];
+  NSLayoutConstraint *contentConstraintBottom = [NSLayoutConstraint constraintWithItem:self.contentView
+                                                                             attribute:NSLayoutAttributeBottom
+                                                                             relatedBy:NSLayoutRelationEqual
+                                                                                toItem:chipView
+                                                                             attribute:NSLayoutAttributeBottom
+                                                                            multiplier:1
+                                                                              constant:0];
+  NSLayoutConstraint *newLeadingConstraint = nil;
+  if (self.chipViews.count == 0) {
+    newLeadingConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
+                                                        attribute:NSLayoutAttributeTrailing
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:chipView
+                                                        attribute:NSLayoutAttributeTrailing
+                                                       multiplier:1
+                                                         constant:0];
+  } else {
+    newLeadingConstraint = [NSLayoutConstraint constraintWithItem:chipView
+                                                        attribute:NSLayoutAttributeTrailing
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:[self.chipViews lastObject]
+                                                        attribute:NSLayoutAttributeTrailing
+                                                       multiplier:1
+                                                         constant:0];
+
+  }
+  NSLayoutConstraint *newTrailingConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
+                                                                           attribute:NSLayoutAttributeTrailing
+                                                                           relatedBy:NSLayoutRelationEqual
+                                                                              toItem:chipView
+                                                                           attribute:NSLayoutAttributeTrailing
+                                                                          multiplier:1
+                                                                            constant:0];
+  [self.contentView addConstraints:@[contentConstraintTop, contentConstraintBottom, newLeadingConstraint, newTrailingConstraint]];
+  self.trailingConstraint = newTrailingConstraint;
+  [self.chipViews addObject:chipView];
+}
 
 - (CGSize)calculateContentSize {
   __block CGFloat widthSum = 0.0f;

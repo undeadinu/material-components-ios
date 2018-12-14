@@ -38,6 +38,6 @@
 @property(nonatomic) CGFloat chipSpacing;
 
 - (void)reloadData;
-//- (void)appendChip:(MDCChipView *)chipView;
+- (void)appendChip:(MDCChipView *)chipView;
 
 @end

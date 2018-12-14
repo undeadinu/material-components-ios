@@ -47,10 +47,10 @@
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    _chipsView = [[MDCChipTextFieldScrollView alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+    _chipsView = [[MDCChipTextFieldScrollView alloc] initWithFrame:CGRectZero];
     _chipsView.dataSource = self;
     _chipsView.chipSpacing = 10.0f;
-//    _chipsView.translatesAutoresizingMaskIntoConstraints = NO;
+    _chipsView.translatesAutoresizingMaskIntoConstraints = NO;
     _chipsView.backgroundColor = [UIColor yellowColor];
     _chipsView.clipsToBounds = YES;
     self.leftView = _chipsView;
@@ -70,7 +70,7 @@
 - (void)appendChipWithText:(NSString *)text {
   MDCChipView *chip = [[MDCChipView alloc] init];
   chip.titleLabel.text = text;
-//  chip.translatesAutoresizingMaskIntoConstraints = NO;
+  chip.translatesAutoresizingMaskIntoConstraints = NO;
 
 //  [self.chipsView addSubview:chip];
 
@@ -89,12 +89,12 @@
 //  }
 
   // recalculate the layout to get a correct chip frame values
-  [chip sizeToFit];
+//  [chip sizeToFit];
   [self.chips addObject:chip];
-  [self.chipsView reloadData];
+//  [self.chipsView reloadData];
+  [self.chipsView appendChip:chip];
+  [self.chipsView layoutIfNeeded];
   self.insetX = CGRectGetMaxX(chip.frame);
-
-//  [self.chipsView layoutIfNeeded];
 
   self.leftViewMode = UITextFieldViewModeAlways;
 }
