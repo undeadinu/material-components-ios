@@ -43,6 +43,9 @@
   UIView *contentView = [[UIView alloc] initWithFrame:self.frame];
   [self addSubview:contentView];
   self.contentView = contentView;
+  
+  [self setShowsVerticalScrollIndicator:NO];
+  [self setShowsHorizontalScrollIndicator:NO];
 }
 
 - (void)reloadData {
@@ -69,6 +72,7 @@
     chipOffsetX += self.chipSpacing;
     chipOffsetX += CGRectGetWidth(chipView.frame);
   }
+  NSLog(@"aa");
 }
 
 - (CGSize)calculateContentSize {

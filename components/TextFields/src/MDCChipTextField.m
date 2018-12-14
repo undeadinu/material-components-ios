@@ -50,7 +50,7 @@
     _chipsView = [[MDCChipTextFieldScrollView alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
     _chipsView.dataSource = self;
     _chipsView.chipSpacing = 10.0f;
-    _chipsView.translatesAutoresizingMaskIntoConstraints = NO;
+//    _chipsView.translatesAutoresizingMaskIntoConstraints = NO;
     _chipsView.backgroundColor = [UIColor yellowColor];
     _chipsView.clipsToBounds = YES;
     self.leftView = _chipsView;
@@ -70,11 +70,11 @@
 - (void)appendChipWithText:(NSString *)text {
   MDCChipView *chip = [[MDCChipView alloc] init];
   chip.titleLabel.text = text;
-  chip.translatesAutoresizingMaskIntoConstraints = NO;
+//  chip.translatesAutoresizingMaskIntoConstraints = NO;
 
 //  [self.chipsView addSubview:chip];
 
-//  // Constraints
+  // Constraints
 //  [self.chipsView addConstraints:@[
 //     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
 //     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]
@@ -161,7 +161,6 @@
 - (CGRect)leftViewRectForBounds:(CGRect)bounds {
   CGRect leftViewRect = [super leftViewRectForBounds:bounds];
   leftViewRect.size.width = MAX(self.insetX, leftViewRect.size.width);
-  // leftViewRect.size.width = self.insetX;
   return leftViewRect;
 }
 
