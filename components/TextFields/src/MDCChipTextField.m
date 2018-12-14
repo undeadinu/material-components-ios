@@ -80,20 +80,29 @@
 //     [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]
 //     ]];
 
-  MDCChipView *lastChip = [self.chips lastObject];
-  if (lastChip == nil) {
-    self.leadingConstraint = [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0];
-    [self.chipsView addConstraint:self.leadingConstraint];
-  } else {
-    [self.chipsView addConstraint:[NSLayoutConstraint constraintWithItem:lastChip attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
-  }
+//  MDCChipView *lastChip = [self.chips lastObject];
+//  if (lastChip == nil) {
+//    self.leadingConstraint = [NSLayoutConstraint constraintWithItem:self.chipsView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0];
+//    [self.chipsView addConstraint:self.leadingConstraint];
+//  } else {
+//    [self.chipsView addConstraint:[NSLayoutConstraint constraintWithItem:lastChip attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:chip attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
+//  }
 
   // recalculate the layout to get a correct chip frame values
-  [self.chipsView layoutIfNeeded];
-  self.insetX = CGRectGetMaxX(chip.frame);
+  [chip sizeToFit];
   [self.chips addObject:chip];
+  [self.chipsView reloadData];
+  self.insetX = CGRectGetMaxX(chip.frame);
+
+//  [self.chipsView layoutIfNeeded];
 
   self.leftViewMode = UITextFieldViewModeAlways;
+}
+
+
+- (void)setInsetX:(CGFloat)insetX {
+  // TODO: The value should take the right view (cancel button etc.) into consideration.
+  _insetX = MIN(insetX, CGRectGetWidth(self.frame) - 50);
 }
 
 - (void)chipTextFieldTextDidChange {
@@ -122,9 +131,18 @@
   CGRect inputRect = [self firstRectForRange:textRange];
 
   CGFloat space = textRect.size.width - inputRect.size.width;
-  if (space < 0 || self.leadingConstraint.constant > 0) {
+//  if (space < 0 || self.leadingConstraint.constant > 0) {
+//    self.insetX += space;
+//    self.leadingConstraint.constant -= space;
+//  }
+  if (space < 0) {
     self.insetX += space;
-    self.leadingConstraint.constant -= space;
+    CGRect originalFrame = self.chipsView.frame;
+    originalFrame.size.width += space;
+    self.chipsView.frame = originalFrame;
+    CGPoint originalOffset = self.chipsView.contentOffset;
+    originalOffset.x -= space;
+    self.chipsView.contentOffset = originalOffset;
   }
 }
 

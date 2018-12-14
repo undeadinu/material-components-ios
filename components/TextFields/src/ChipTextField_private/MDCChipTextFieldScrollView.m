@@ -75,6 +75,8 @@
   NSLog(@"aa");
 }
 
+//- (void)
+
 - (CGSize)calculateContentSize {
   __block CGFloat widthSum = 0.0f;
   [self.chipViews enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
