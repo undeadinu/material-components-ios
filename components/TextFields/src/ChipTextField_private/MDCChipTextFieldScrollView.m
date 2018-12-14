@@ -45,6 +45,7 @@
   [self addSubview:contentView];
   self.contentView = contentView;
 
+  self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
   NSLayoutConstraint *contentConstraintTop = [NSLayoutConstraint constraintWithItem:contentView
                                                                        attribute:NSLayoutAttributeTop
                                                                        relatedBy:NSLayoutRelationEqual
@@ -73,7 +74,14 @@
                                                                               attribute:NSLayoutAttributeTrailing
                                                                              multiplier:1
                                                                                constant:0];
-  [self addConstraints:@[contentConstraintTop, contentConstraintBottom, contentConstraintLeading, contentConstraintTrailing]];
+  NSLayoutConstraint *heightContstraint = [NSLayoutConstraint constraintWithItem:contentView
+                                                                               attribute:NSLayoutAttributeHeight
+                                                                               relatedBy:NSLayoutRelationEqual
+                                                                                  toItem:self
+                                                                               attribute:NSLayoutAttributeHeight
+                                                                              multiplier:1
+                                                                                constant:0];
+  [self addConstraints:@[contentConstraintTop, contentConstraintBottom, contentConstraintLeading, contentConstraintTrailing, heightContstraint]];
   self.trailingConstraint = contentConstraintTrailing;
   
   [self setShowsVerticalScrollIndicator:NO];
@@ -111,6 +119,7 @@
 - (void)appendChip:(MDCChipView *)chipView {
   [self removeConstraint:self.trailingConstraint];
   [self.contentView addSubview:chipView];
+  chipView.translatesAutoresizingMaskIntoConstraints = NO;
   NSLayoutConstraint *contentConstraintTop = [NSLayoutConstraint constraintWithItem:self.contentView
                                                                           attribute:NSLayoutAttributeTop
                                                                           relatedBy:NSLayoutRelationEqual
@@ -118,7 +127,7 @@
                                                                           attribute:NSLayoutAttributeTop
                                                                          multiplier:1
                                                                            constant:0];
-  NSLayoutConstraint *contentConstraintBottom = [NSLayoutConstraint constraintWithItem:self.contentView
+  NSLayoutConstraint *contentConstraintBottom = [NSLayoutConstraint constraintWithItem: self.contentView
                                                                              attribute:NSLayoutAttributeBottom
                                                                              relatedBy:NSLayoutRelationEqual
                                                                                 toItem:chipView
@@ -128,15 +137,15 @@
   NSLayoutConstraint *newLeadingConstraint = nil;
   if (self.chipViews.count == 0) {
     newLeadingConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
-                                                        attribute:NSLayoutAttributeTrailing
+                                                        attribute:NSLayoutAttributeLeading
                                                         relatedBy:NSLayoutRelationEqual
                                                            toItem:chipView
-                                                        attribute:NSLayoutAttributeTrailing
+                                                        attribute:NSLayoutAttributeLeading
                                                        multiplier:1
                                                          constant:0];
   } else {
     newLeadingConstraint = [NSLayoutConstraint constraintWithItem:chipView
-                                                        attribute:NSLayoutAttributeTrailing
+                                                        attribute:NSLayoutAttributeLeading
                                                         relatedBy:NSLayoutRelationEqual
                                                            toItem:[self.chipViews lastObject]
                                                         attribute:NSLayoutAttributeTrailing
